@@ -35,7 +35,7 @@ func main() {
 	if err := srv.Start(); err != nil {
 		log.Fatalln(err)
 	}
-	srv.World().Generator(gen.NewComplex())
+	srv.World().Generator(gen.New())
 	srv.World().ReadOnly()
 	srv.World().SetTime(5000)
 	srv.World().StopTime()

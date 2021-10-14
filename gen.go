@@ -11,7 +11,7 @@ import (
 	"time"
 )
 
-type Complex struct {
+type Generator struct {
 	n                      nf
 	wave                   opensimplex.Noise
 	temp, hum              nf
@@ -19,11 +19,11 @@ type Complex struct {
 	b                      biomeList
 }
 
-// NewComplex creates a new Complex generator that implements world.Generator.
-func NewComplex() *Complex {
+// New creates a new Generator that implements world.Generator.
+func New() *Generator {
 	seed := time.Now().Unix()
 	n := noise(seed, 3, 2, 0.5)
-	return &Complex{
+	return &Generator{
 		n:          n,
 		wave:       opensimplex.NewNormalized(seed),
 		biomeBlurX: noise(seed+0x00f, 4, 2, 0.5),
@@ -35,7 +35,7 @@ func NewComplex() *Complex {
 }
 
 // GenerateChunk generates a chunk.Chunk at a world.ChunkPos in the world.
-func (c *Complex) GenerateChunk(pos world.ChunkPos, chunk *chunk.Chunk) {
+func (c *Generator) GenerateChunk(pos world.ChunkPos, chunk *chunk.Chunk) {
 	d := triangulate(pos, 18, 0.06)
 	cells := voronoiCells(d)
 
@@ -62,7 +62,7 @@ var stone, _ = world.BlockRuntimeID(block.Stone{})
 
 // height calculates the height at a specific position in the world. It takes the average heights produced by the biomes
 // around the position to smooth out the terrain.
-func (c *Complex) height(baseX, baseZ, absX, absZ int32, cells []cell) float64 {
+func (c *Generator) height(baseX, baseZ, absX, absZ int32, cells []cell) float64 {
 	const smoothingRadius = 7
 	var normalizer, height float64
 	curve := normalCurve
@@ -95,7 +95,7 @@ func (c *Complex) height(baseX, baseZ, absX, absZ int32, cells []cell) float64 {
 }
 
 // displayDiagram displays the voronoi.Diagram passed in the chunk.Chunk passed by drawing the edges in the sky.
-func (c *Complex) displayDiagram(d *delaunay.Triangulation, height int, chunk *chunk.Chunk) {
+func (c *Generator) displayDiagram(d *delaunay.Triangulation, height int, chunk *chunk.Chunk) {
 	iterateVoronoiEdges(d, func(pos delaunay.Point) {
 		if pos.X >= 0 && pos.X < 16 && pos.Y >= 0 && pos.Y < 16 {
 			chunk.SetRuntimeID(uint8(pos.X), int16(height), uint8(pos.Y), 0, stone)
@@ -105,7 +105,7 @@ func (c *Complex) displayDiagram(d *delaunay.Triangulation, height int, chunk *c
 
 // cell finds the voronoi.Cell that a position was in in the voronoi.Diagram passed. If the cell was not found, false
 // is returned.
-func (c *Complex) cell(baseX, baseZ, absX, absZ int32, cells []cell) (cell, bool) {
+func (c *Generator) cell(baseX, baseZ, absX, absZ int32, cells []cell) (cell, bool) {
 	localX, localZ := absX-baseX, absZ-baseZ
 
 	v := delaunay.Point{
@@ -123,7 +123,7 @@ func (c *Complex) cell(baseX, baseZ, absX, absZ int32, cells []cell) (cell, bool
 }
 
 // biome returns the Biome that a position was in based on the cell the position was in in the voronoi.Diagram passed.
-func (c *Complex) biome(baseX, baseZ, absX, absZ int32, cells []cell) Biome {
+func (c *Generator) biome(baseX, baseZ, absX, absZ int32, cells []cell) Biome {
 	const freq = 0.05
 	ce, ok := c.cell(baseX, baseZ, absX, absZ, cells)
 	if !ok {
