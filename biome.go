@@ -70,8 +70,7 @@ func (b biomeSet) selectBiome(hum, temp float64) Biome {
 		case temp < 0.4:
 			return b.Mountains // small mountains
 		default:
-			return b.Mountains
-			//return b.Ocean
+			return b.Ocean
 		}
 	}
 	return b.Plains
