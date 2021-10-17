@@ -8,25 +8,27 @@ import (
 type Biome interface {
 	// CoverGround covers the ground of the chunk.Chunk passed using this biome's specific features.
 	CoverGround(x, z uint8, absX, absZ int32, height int, c *chunk.Chunk)
-	// ModNoise modifies the noise value passed to it according to the landscape features of the biome.
-	ModNoise(v float64) float64
+	// Height returns a height value produced for the biome at a specific x and z in the world. Biomes generally use
+	// noise to return a height value.
+	Height(x, z float64) float64
 }
 
-type biomeList struct {
+type biomeSet struct {
 	Plains    Biome
 	Ocean     Biome
 	Mountains Biome
 }
 
-func newBiomeList(noise nf) biomeList {
-	return biomeList{
-		Plains:    &biome.Plains{},
-		Ocean:     &biome.Ocean{},
-		Mountains: &biome.Mountains{Noise: noise},
+func newBiomeSet(seed int64) biomeSet {
+	n := noise(seed, 3, 2, 0.5)
+	return biomeSet{
+		Plains:    &biome.Plains{Noise: n},
+		Ocean:     &biome.Ocean{Noise: n},
+		Mountains: &biome.Mountains{Noise: n},
 	}
 }
 
-func (b biomeList) selectBiome(hum, temp float64) Biome {
+func (b biomeSet) selectBiome(hum, temp float64) Biome {
 	switch {
 	case hum < 0.25:
 		switch {

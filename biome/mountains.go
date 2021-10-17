@@ -16,8 +16,8 @@ func (m *Mountains) CoverGround(x, z uint8, absX, absZ int32, height int, c *chu
 	}
 }
 
-func (m *Mountains) ModNoise(v float64) float64 {
-	return v*0.6 + 0.05
+func (m *Mountains) Height(x, z float64) float64 {
+	return m.Noise(x, z)*0.6 + 0.05
 }
 
 // slope calculates roughly the slope at a specific x and z value in the noise function passed.
