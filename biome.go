@@ -3,6 +3,7 @@ package gen
 import (
 	"github.com/df-mc/dragonfly/server/world/chunk"
 	"github.com/df-mc/gen/biome"
+	"github.com/df-mc/gen/f"
 )
 
 type Biome interface {
@@ -21,10 +22,15 @@ type biomeSet struct {
 
 func newBiomeSet(seed int64) biomeSet {
 	n := noise(seed, 3, 2, 0.5)
+
+	d := f.WarpDomain(n, 0.2, 70)
 	return biomeSet{
-		Plains:    &biome.Plains{Noise: n},
-		Ocean:     &biome.Ocean{Noise: n},
-		Mountains: &biome.Mountains{Noise: n},
+		Plains: &biome.Plains{Noise: n},
+		Ocean:  &biome.Ocean{Noise: n},
+		Mountains: &biome.Mountains{Noise: f.Sum(
+			d,
+			f.MulF(noise(seed, 3, 3, 0.65), f.Deriv(d, 0.003)),
+		)},
 	}
 }
 
@@ -64,7 +70,8 @@ func (b biomeSet) selectBiome(hum, temp float64) Biome {
 		case temp < 0.4:
 			return b.Mountains // small mountains
 		default:
-			return b.Ocean
+			return b.Mountains
+			//return b.Ocean
 		}
 	}
 	return b.Plains

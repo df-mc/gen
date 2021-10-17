@@ -19,7 +19,7 @@ type terrainMap []terrainColumn
 // calculateTerrainMap calculates a terrainMap at a specific world.ChunkPos. The r value passed specifies how much space
 // around the chunk's bounds is also calculated to prepare for smoothing the terrain map.
 func calculateTerrainMap(r int, pos world.ChunkPos, g *Generator, chunk *chunk.Chunk) terrainMap {
-	d := triangulate(pos, 18, 0.06)
+	d := triangulate(pos, 19, 0.06)
 	cells := voronoiCells(d)
 	g.displayDiagram(d, 128, chunk)
 
@@ -57,9 +57,15 @@ func (m terrainMap) smooth(r int, c curve) terrainMap {
 	for x := 0; x < dx; x++ {
 		for y := 0; y < dx; y++ {
 			norm, height = 0, 0
+			thisCol := m[(x+r)+(y+r)*(dx+r*2)]
+			thisHeight := thisCol.height
+			biome = thisCol.biome
 
 			for xx := -r; xx <= r; xx++ {
 				for yy := -r; yy <= r; yy++ {
+					if xx == 0 && yy == 0 {
+						continue
+					}
 					dist := math.Sqrt(float64(xx*xx) + float64(yy*yy))
 					if dist > rf {
 						// The block fell outside of the circle so we don't need to check this. These blocks have a relatively
@@ -69,10 +75,11 @@ func (m terrainMap) smooth(r int, c curve) terrainMap {
 					weight := c.at(int(math.Floor(curveStepSize * dist)))
 					norm += weight
 					col := m[(x+xx+r)+(y+yy+r)*(dx+r*2)]
-					if xx == 0 && yy == 0 {
-						biome = col.biome
+					h := col.height
+					if col.biome == biome {
+						h = thisHeight
 					}
-					height += weight * col.height
+					height += weight * h
 				}
 			}
 			smooth[x+y*dx] = terrainColumn{

@@ -5,16 +5,17 @@ import (
 	"github.com/df-mc/dragonfly/server/block"
 	"github.com/df-mc/dragonfly/server/world"
 	"github.com/df-mc/dragonfly/server/world/chunk"
+	"github.com/df-mc/gen/f"
 	"github.com/fogleman/delaunay"
 	"github.com/ojrac/opensimplex-go"
 	"time"
 )
 
 type Generator struct {
-	n                      nf
+	n                      f.F
 	wave                   opensimplex.Noise
-	temp, hum              nf
-	biomeBlurX, biomeBlurZ nf
+	temp, hum              f.F
+	biomeBlurX, biomeBlurZ f.F
 	b                      biomeSet
 }
 
@@ -42,7 +43,7 @@ func (c *Generator) GenerateChunk(pos world.ChunkPos, chunk *chunk.Chunk) {
 		for z := uint8(0); z < 16; z++ {
 			col := m[x+z*16]
 
-			for y := int16(0); y < int16(col.height); y++ {
+			for y := int16(0); y <= int16(col.height); y++ {
 				chunk.SetRuntimeID(x, y, z, 0, stone)
 			}
 			col.biome.CoverGround(x, z, baseX+int32(x), baseZ+int32(z), int(col.height), chunk)

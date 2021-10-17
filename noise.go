@@ -1,12 +1,10 @@
 package gen
 
 import (
+	"github.com/df-mc/gen/f"
 	"github.com/ojrac/opensimplex-go"
 	"math"
 )
-
-// nf is a type alias for a function produced by the noise function.
-type nf func(x, y float64) float64
 
 // noise returns an function that may be used to calculate a layered noise value at a specific x and y.
 // The seed passed is used to seed the noise instances created. The octaves specifies the amount of noise 'layers' that
@@ -16,7 +14,7 @@ type nf func(x, y float64) float64
 //   0: amp = 0.5^0 = 1.00, freq = 2.0^0 = 1.00
 //   1: amp = 0.5^1 = 0.50, freq = 2.0^1 = 2.00
 //   2: amp = 0.5^2 = 0.25, freq = 2.0^2 = 4.00
-func noise(seed int64, octaves int, lacunarity, persistence float64) nf {
+func noise(seed int64, octaves int, lacunarity, persistence float64) f.F {
 	// Create noise instances for all octaves.
 	n := make([]opensimplex.Noise, octaves)
 	for i := 0; i < octaves; i++ {
