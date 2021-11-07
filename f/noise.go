@@ -1,12 +1,11 @@
-package gen
+package f
 
 import (
-	"github.com/df-mc/gen/f"
 	"github.com/ojrac/opensimplex-go"
 	"math"
 )
 
-// noise returns an function that may be used to calculate a layered noise value at a specific x and y.
+// Noise returns an function that may be used to calculate a layered noise value at a specific x and y.
 // The seed passed is used to seed the noise instances created. The octaves specifies the amount of noise 'layers' that
 // should be present. Setting this value to 4 means 4 noise values will be layered on top of each other.
 // The lacunarity and persistence specify the frequency and amplitude respectively of subsequent octaves. An example:
@@ -14,14 +13,14 @@ import (
 //   0: amp = 0.5^0 = 1.00, freq = 2.0^0 = 1.00
 //   1: amp = 0.5^1 = 0.50, freq = 2.0^1 = 2.00
 //   2: amp = 0.5^2 = 0.25, freq = 2.0^2 = 4.00
-func noise(seed int64, octaves int, lacunarity, persistence float64) f.F {
-	// Create noise instances for all octaves.
+func Noise(seed int64, octaves int, lacunarity, persistence float64) F {
+	// Create Noise instances for all octaves.
 	n := make([]opensimplex.Noise, octaves)
 	for i := 0; i < octaves; i++ {
-		n[i] = opensimplex.NewNormalized(seed)
+		n[i] = opensimplex.New(seed)
 	}
 
-	// Calculate the maximum possible value when adding together noise values from all octaves.
+	// Calculate the maximum possible value when adding together Noise values from all octaves.
 	var max float64
 	for i := 0; i < octaves; i++ {
 		max += math.Pow(persistence, float64(i))
@@ -31,7 +30,6 @@ func noise(seed int64, octaves int, lacunarity, persistence float64) f.F {
 		var v float64
 
 		for i, noise := range n {
-			// Lacunarity gives us the frequency
 			freq := math.Pow(lacunarity, float64(i)) * 0.04
 			amp := math.Pow(persistence, float64(i))
 

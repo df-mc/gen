@@ -19,7 +19,7 @@ type terrainMap []terrainColumn
 // calculateTerrainMap calculates a terrainMap at a specific world.ChunkPos. The r value passed specifies how much space
 // around the chunk's bounds is also calculated to prepare for smoothing the terrain map.
 func calculateTerrainMap(r int, pos world.ChunkPos, g *Generator, chunk *chunk.Chunk) terrainMap {
-	d := triangulate(pos, 19, 0.06)
+	d := triangulate(pos, 20, 0.06)
 	cells := voronoiCells(d)
 	g.displayDiagram(d, 128, chunk)
 

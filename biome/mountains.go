@@ -2,11 +2,12 @@ package biome
 
 import (
 	"github.com/df-mc/dragonfly/server/world/chunk"
+	"github.com/df-mc/gen/f"
 	"math"
 )
 
 type Mountains struct {
-	Noise func(x, z float64) float64
+	Noise f.F
 }
 
 func (m *Mountains) CoverGround(x, z uint8, absX, absZ int32, height int, c *chunk.Chunk) {

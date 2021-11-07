@@ -68,7 +68,7 @@ func (c cell) inside(v delaunay.Point) bool {
 	return true
 }
 
-func (c cell) centre() delaunay.Point {
+func (c cell) centre(baseX, baseY float64) delaunay.Point {
 	p := delaunay.Point{}
 	for _, corner := range c.corners {
 		p.X += corner.X
@@ -77,11 +77,13 @@ func (c cell) centre() delaunay.Point {
 	l := float64(len(c.corners))
 	p.X /= l
 	p.Y /= l
+	p.X += baseX
+	p.Y += baseY
 	return p
 }
 
 func voronoiCells(d *delaunay.Triangulation) []cell {
-	pointList := make([]cell, 0, 15)
+	cells := make([]cell, 0, 15)
 	m := make(map[int]struct{})
 	for e := 0; e < len(d.Triangles); e++ {
 		p := d.Triangles[nextHalfEdge(e)]
@@ -95,10 +97,10 @@ func voronoiCells(d *delaunay.Triangulation) []cell {
 			for i, t := range triangles {
 				points[i] = triangleCentre(d, t)
 			}
-			pointList = append(pointList, cell{corners: points})
+			cells = append(cells, cell{corners: points})
 		}
 	}
-	return pointList
+	return cells
 }
 
 func edgesAroundPoint(d *delaunay.Triangulation, start int) []int {
