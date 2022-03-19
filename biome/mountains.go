@@ -13,7 +13,7 @@ type Mountains struct {
 func (m *Mountains) CoverGround(x, z uint8, absX, absZ int32, height int, c *chunk.Chunk) {
 	s := slope(float64(absX), float64(absZ), m.Height)
 	if s < 0.01 {
-		c.SetRuntimeID(x, int16(height), z, 0, grass)
+		c.SetBlock(x, int16(height), z, 0, grass)
 	}
 }
 

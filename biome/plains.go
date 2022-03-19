@@ -10,9 +10,9 @@ type Plains struct {
 }
 
 func (p *Plains) CoverGround(x, z uint8, _, _ int32, height int, c *chunk.Chunk) {
-	c.SetRuntimeID(x, int16(height), z, 0, grass)
-	c.SetRuntimeID(x, int16(height-1), z, 0, dirt)
-	c.SetRuntimeID(x, int16(height-2), z, 0, dirt)
+	c.SetBlock(x, int16(height), z, 0, grass)
+	c.SetBlock(x, int16(height-1), z, 0, dirt)
+	c.SetBlock(x, int16(height-2), z, 0, dirt)
 }
 
 func (p *Plains) Height(x, z float64) float64 {

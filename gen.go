@@ -38,20 +38,20 @@ func (g *Generator) GenerateChunk(pos world.ChunkPos, chunk *chunk.Chunk) {
 			col := m[x+z*16]
 
 			for y := int16(0); y <= int16(col.height); y++ {
-				chunk.SetRuntimeID(x, y, z, 0, stone)
+				chunk.SetBlock(x, y, z, 0, stone)
 			}
 			col.biome.CoverGround(x, z, baseX+int32(x), baseZ+int32(z), int(col.height), chunk)
 		}
 	}
 }
 
-var stone, _ = world.BlockRuntimeID(block.Stone{})
+var stone = world.BlockRuntimeID(block.Stone{})
 
 // displayDiagram displays the voronoi.Diagram passed in the chunk.Chunk passed by drawing the edges in the sky.
 func (g *Generator) displayDiagram(d *delaunay.Triangulation, height int, chunk *chunk.Chunk) {
 	iterateVoronoiEdges(d, func(pos delaunay.Point) {
 		if pos.X >= 0 && pos.X < 16 && pos.Y >= 0 && pos.Y < 16 {
-			chunk.SetRuntimeID(uint8(pos.X), int16(height), uint8(pos.Y), 0, stone)
+			chunk.SetBlock(uint8(pos.X), int16(height), uint8(pos.Y), 0, stone)
 		}
 	})
 }

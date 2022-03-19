@@ -6,8 +6,8 @@ import (
 )
 
 var (
-	grass, _ = world.BlockRuntimeID(block.Grass{})
-	dirt, _  = world.BlockRuntimeID(block.Dirt{})
-	stone, _ = world.BlockRuntimeID(block.Stone{})
-	sand, _  = world.BlockRuntimeID(block.Sand{})
+	grass = world.BlockRuntimeID(block.Grass{})
+	dirt  = world.BlockRuntimeID(block.Dirt{})
+	stone = world.BlockRuntimeID(block.Stone{})
+	sand  = world.BlockRuntimeID(block.Sand{})
 )

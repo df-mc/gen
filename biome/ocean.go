@@ -10,9 +10,9 @@ type Ocean struct {
 }
 
 func (o *Ocean) CoverGround(x, z uint8, _, _ int32, height int, c *chunk.Chunk) {
-	c.SetRuntimeID(x, int16(height), z, 0, sand)
-	c.SetRuntimeID(x, int16(height-1), z, 0, sand)
-	c.SetRuntimeID(x, int16(height-2), z, 0, sand)
+	c.SetBlock(x, int16(height), z, 0, sand)
+	c.SetBlock(x, int16(height-1), z, 0, sand)
+	c.SetBlock(x, int16(height-2), z, 0, sand)
 }
 
 func (o *Ocean) Height(x, z float64) float64 {
